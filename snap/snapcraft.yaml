@@ -1,0 +1,36 @@
+name: mir-firefox
+version: '0.1'
+summary: GLMark2 IoT example kiosk
+description: GLMark2 IoT example kiosk, using Wayland
+base: core18
+confinement: devmode
+grade: devel
+
+apps:
+  mir-firefox:
+    command: "/snap/firefox/current/firefox"
+    environment:
+      RESOURCES_PATH: $SNAP_COMMON
+      MIR_SERVER_PLATFORM_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/mir/server-platform
+      MIR_SERVER_XWAYLAND_PATH: ${SNAP}/usr/bin/Xwayland
+      MIR_SERVER_APP_ENV: "GDK_BACKEND=wayland,x11:QT_QPA_PLATFORM=wayland:SDL_VIDEODRIVER=wayland:-QT_QPA_PLATFORMTHEME:NO_AT_BRIDGE=1:QT_ACCESSIBILITY:QT_LINUX_ACCESSIBILITY_ALWAYS_ON:_JAVA_AWT_WM_NONREPARENTING=1:MOZ_ENABLE_WAYLAND=1:-GTK_MODULES:-OOO_FORCE_DESKTOP:-GNOME_ACCESSIBILITY:-__EGL_VENDOR_LIBRARY_DIRS:-LIBGL_DRIVERS_PATH"
+      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
+      PATH: ${PATH}:/snap/bin
+      XDG_DATA_DIRS: ${XDG_DATA_DIRS}:~/.local/share
+    plugs:
+    -  home
+    -  desktop
+    -  opengl
+    -  wayland
+
+parts:
+  firefox:
+    plugin: nil
+    stage-packages:
+      - firefox
+
+
+layout:
+    /usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0:
+      bind: $SNAP_COMMON
